@@ -2,6 +2,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>吴敏宝宝 ❤️</title>
 
 <style>
@@ -10,30 +12,25 @@
     box-sizing:border-box;
 }
 
+
 body{
+
     margin:0;
     height:100vh;
     overflow:hidden;
+
     display:flex;
     justify-content:center;
     align-items:center;
+
     font-family:"Microsoft YaHei";
-    background:linear-gradient(
-        135deg,
-        #ff9ecf,
-        #ffd6e8,
-        #ffc1dc
+
+    background:
+    linear-gradient(
+    135deg,
+    #ffb6d9,
+    #ffe6f1
     );
-    background-size:300% 300%;
-    animation:bg 8s infinite;
-}
-
-
-@keyframes bg{
-
-    50%{
-        background-position:100% 100%;
-    }
 
 }
 
@@ -41,21 +38,20 @@ body{
 
 .card{
 
-    width:350px;
-    padding:35px;
+    width:330px;
 
-    background:rgba(255,255,255,.75);
+    padding:35px 25px;
 
-    backdrop-filter:blur(15px);
+    background:white;
 
-    border-radius:30px;
+    border-radius:28px;
 
     text-align:center;
 
     box-shadow:
-    0 20px 50px rgba(255,0,100,.3);
+    0 10px 30px rgba(255,0,100,.25);
 
-    z-index:2;
+    z-index:5;
 
 }
 
@@ -63,18 +59,19 @@ body{
 
 .heart{
 
-    font-size:60px;
+    font-size:55px;
 
-    animation:heart 1s infinite;
+    animation:
+    beat 1.2s infinite;
 
 }
 
 
 
-@keyframes heart{
+@keyframes beat{
 
     50%{
-        transform:scale(1.2);
+        transform:scale(1.15);
     }
 
 }
@@ -83,9 +80,12 @@ body{
 
 h1{
 
-    color:#ff3f8e;
+    color:#ff4081;
+
+    font-size:32px;
 
 }
+
 
 
 h2{
@@ -100,10 +100,11 @@ h2{
 
     color:#ff6699;
 
+    line-height:28px;
+
     min-height:60px;
 
 }
-
 
 
 
@@ -113,11 +114,11 @@ button{
 
     border-radius:40px;
 
-    padding:12px 30px;
+    font-size:20px;
+
+    padding:12px 28px;
 
     margin:15px;
-
-    font-size:20px;
 
     cursor:pointer;
 
@@ -131,7 +132,11 @@ button{
 
     color:white;
 
-    transition:.5s;
+    transition:
+    transform .4s ease;
+
+    box-shadow:
+    0 5px 15px rgba(255,0,100,.3);
 
 }
 
@@ -140,6 +145,8 @@ button{
 #no{
 
     background:#ddd;
+
+    color:#777;
 
     position:absolute;
 
@@ -155,11 +162,15 @@ button{
 
     position:absolute;
 
-    top:-50px;
+    top:-30px;
 
-    animation:fall 5s linear forwards;
+    z-index:1;
+
+    animation:
+    fall 5s linear forwards;
 
 }
+
 
 
 @keyframes fall{
@@ -167,8 +178,7 @@ button{
     to{
 
         transform:
-        translateY(110vh)
-        rotate(360deg);
+        translateY(110vh);
 
         opacity:0;
 
@@ -179,30 +189,37 @@ button{
 
 
 
+
 /* 烟花 */
 
 .fire{
 
     position:absolute;
 
-    font-size:35px;
+    font-size:30px;
 
-    animation:boom 1s forwards;
+    animation:
+    boom 1s forwards;
 
 }
 
 
+
 @keyframes boom{
 
-    from{
+
+    0%{
 
         transform:scale(.2);
 
+        opacity:1;
+
     }
 
-    to{
 
-        transform:scale(5);
+    100%{
+
+        transform:scale(3);
 
         opacity:0;
 
@@ -214,12 +231,11 @@ button{
 
 </style>
 
-
 </head>
 
 
-<body>
 
+<body>
 
 
 <div class="card">
@@ -235,11 +251,7 @@ button{
 </h1>
 
 
-
-<div class="text" id="text">
-
-</div>
-
+<div class="text" id="text"></div>
 
 
 <button id="yes">
@@ -256,93 +268,125 @@ NO 💔
 
 
 
-
 <script>
 
 
 // 打字效果
 
 let words=
-"遇见你之后，世界变得更加温柔。\n我喜欢你，可不可以跟我在一起？";
+"遇见你以后，世界变得温柔。\n我喜欢你，可以跟我在一起吗？";
+
 
 let index=0;
 
 
 function typing(){
 
-    if(index<words.length){
 
-        document.getElementById("text")
-        .innerHTML+=words[index]
-        .replace("\n","<br>");
+if(index<words.length){
 
-        index++;
 
-        setTimeout(typing,120);
+let t=document.getElementById("text");
 
-    }
+
+t.innerHTML+=
+words[index]=="\n"
+?
+"<br>"
+:
+words[index];
+
+
+index++;
+
+
+setTimeout(
+typing,
+100
+);
+
 
 }
+
+
+}
+
 
 typing();
 
 
 
 
-// YES变大
+
+// YES放大
 
 
-let yes=document.getElementById("yes");
+let yes=
+document.getElementById("yes");
+
 
 let scale=1;
+
 
 
 yes.onclick=function(){
 
 
-    scale+=0.08;
+scale+=0.08;
 
 
-    if(scale<1.8){
-
-        yes.style.transform=
-        "scale("+scale+")";
-
-    }
+if(scale<1.65){
 
 
+yes.style.transform=
+"scale("+scale+")";
 
-    if(scale>=1.7){
-
-
-        document.querySelector(".card")
-        .innerHTML=
-
-        `
-        <div class="heart">
-        💖
-        </div>
-
-        <h1>
-        吴敏宝宝 ❤️
-        </h1>
-
-        <h2>
-        表白成功！
-        </h2>
-
-        <p>
-        以后请多多指教💕
-        </p>
-
-        `;
-
-
-        fireworks();
-
-    }
 
 }
+
+
+
+if(scale>=1.65){
+
+
+
+document.querySelector(".card").innerHTML=
+
+
+`
+
+<div class="heart">
+💖
+</div>
+
+
+<h1>
+吴敏宝宝 ❤️
+</h1>
+
+
+<h2>
+表白成功！
+</h2>
+
+
+<p>
+以后请多多指教💕
+</p>
+
+`;
+
+
+
+fireworks();
+
+
+
+}
+
+
+};
+
 
 
 
@@ -350,19 +394,23 @@ yes.onclick=function(){
 // NO逃跑
 
 
-let no=document.getElementById("no");
+let no=
+document.getElementById("no");
+
 
 
 no.onmouseover=function(){
 
-    no.style.left=
-    Math.random()*80+"vw";
+
+no.style.left=
+Math.random()*75+"vw";
 
 
-    no.style.top=
-    Math.random()*80+"vh";
+no.style.top=
+Math.random()*75+"vh";
 
-}
+
+};
 
 
 
@@ -371,39 +419,75 @@ no.onmouseover=function(){
 // 爱心雨
 
 
-setInterval(()=>{
-
-
-    let love=document.createElement("div");
-
-    love.className="love";
-
-
-    love.innerHTML=
-    ["❤️","💗","💕","💖"]
-    [Math.floor(Math.random()*4)];
-
-
-    love.style.left=
-    Math.random()*100+"vw";
-
-
-    love.style.fontSize=
-    20+Math.random()*20+"px";
-
-
-    document.body.appendChild(love);
-
-
-    setTimeout(()=>{
-
-        love.remove();
-
-    },5000);
+setInterval(function(){
 
 
 
-},200);
+let love=
+document.createElement("div");
+
+
+love.className="love";
+
+
+love.innerHTML=
+[
+"❤️",
+"💗",
+"💕"
+]
+[
+Math.floor(Math.random()*3)
+];
+
+
+
+love.style.left=
+Math.random()*100+"vw";
+
+
+
+love.style.fontSize=
+(18+Math.random()*15)+"px";
+
+
+
+document.body.appendChild(love);
+
+
+
+
+setTimeout(function(){
+
+
+love.remove();
+
+
+},5000);
+
+
+
+
+
+// 限制数量
+
+let list=
+document.querySelectorAll(".love");
+
+
+if(list.length>20){
+
+
+list[0].remove();
+
+
+}
+
+
+
+},500);
+
+
 
 
 
@@ -415,21 +499,30 @@ setInterval(()=>{
 function fireworks(){
 
 
-for(let i=0;i<60;i++){
+
+for(let i=0;i<25;i++){
 
 
-setTimeout(()=>{
+
+setTimeout(function(){
 
 
-let f=document.createElement("div");
+let f=
+document.createElement("div");
 
 
 f.className="fire";
 
 
 f.innerHTML=
-["🎆","✨","💖"]
-[Math.floor(Math.random()*3)];
+[
+"🎆",
+"✨",
+"💖"
+]
+[
+Math.floor(Math.random()*3)
+];
 
 
 
@@ -446,7 +539,7 @@ document.body.appendChild(f);
 
 
 
-setTimeout(()=>{
+setTimeout(function(){
 
 f.remove();
 
@@ -454,7 +547,8 @@ f.remove();
 
 
 
-},i*80);
+},i*100);
+
 
 
 }
@@ -468,5 +562,4 @@ f.remove();
 
 
 </body>
-
 </html>
