@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
@@ -40,7 +41,7 @@ body{
 
     width:330px;
 
-    padding:35px 25px;
+    padding:30px 25px;
 
     background:white;
 
@@ -102,7 +103,28 @@ h2{
 
     line-height:28px;
 
-    min-height:60px;
+    min-height:50px;
+
+}
+
+
+/* 专属情书 */
+
+.letter{
+
+    margin-top:18px;
+
+    padding:15px;
+
+    background:#fff5fa;
+
+    border-radius:15px;
+
+    color:#ff6699;
+
+    font-size:15px;
+
+    line-height:26px;
 
 }
 
@@ -246,12 +268,31 @@ button{
 </div>
 
 
+
 <h1>
 💗 吴敏宝宝 💗
 </h1>
 
 
+
 <div class="text" id="text"></div>
+
+
+
+<div class="letter">
+
+吴敏宝宝：<br><br>
+
+从遇见你的那一刻开始，<br>
+
+我的世界多了一份期待。<br><br>
+
+未来的每一天，<br>
+
+希望都有你的陪伴 ❤️
+
+</div>
+
 
 
 <button id="yes">
@@ -264,7 +305,9 @@ NO 💔
 </button>
 
 
+
 </div>
+
 
 
 
@@ -313,6 +356,7 @@ typing,
 
 
 typing();
+
 
 
 
@@ -371,7 +415,10 @@ document.querySelector(".card").innerHTML=
 
 
 <p>
-以后请多多指教💕
+未来的每一天，
+<br>
+请让我陪着你 💕
+
 </p>
 
 `;
@@ -386,6 +433,7 @@ fireworks();
 
 
 };
+
 
 
 
@@ -411,6 +459,8 @@ Math.random()*75+"vh";
 
 
 };
+
+
 
 
 
@@ -469,8 +519,6 @@ love.remove();
 
 
 
-// 限制数量
-
 let list=
 document.querySelectorAll(".love");
 
@@ -486,6 +534,8 @@ list[0].remove();
 
 
 },500);
+
+
 
 
 
