@@ -5,6 +5,7 @@
 <title>吴敏宝宝 ❤️</title>
 
 <style>
+
 *{
     box-sizing:border-box;
 }
@@ -13,114 +14,164 @@ body{
     margin:0;
     height:100vh;
     overflow:hidden;
-    background:linear-gradient(135deg,#ff9ecf,#ffe5f0);
-    font-family:"Microsoft YaHei";
     display:flex;
     justify-content:center;
     align-items:center;
+    font-family:"Microsoft YaHei";
+    background:linear-gradient(
+        135deg,
+        #ff9ecf,
+        #ffd6e8,
+        #ffc1dc
+    );
+    background-size:300% 300%;
+    animation:bg 8s infinite;
 }
+
+
+@keyframes bg{
+
+    50%{
+        background-position:100% 100%;
+    }
+
+}
+
 
 
 .card{
-    width:380px;
+
+    width:350px;
     padding:35px;
-    background:rgba(255,255,255,.9);
+
+    background:rgba(255,255,255,.75);
+
+    backdrop-filter:blur(15px);
+
     border-radius:30px;
+
     text-align:center;
-    box-shadow:0 10px 40px rgba(255,0,120,.3);
+
+    box-shadow:
+    0 20px 50px rgba(255,0,100,.3);
+
     z-index:2;
-    overflow:hidden;
+
 }
+
 
 
 .heart{
-    font-size:55px;
-    animation:beat 1s infinite;
+
+    font-size:60px;
+
+    animation:heart 1s infinite;
+
 }
 
 
-@keyframes beat{
+
+@keyframes heart{
+
     50%{
-        transform:scale(1.15);
+        transform:scale(1.2);
     }
+
 }
+
 
 
 h1{
-    color:#ff4d94;
-    font-size:36px;
+
+    color:#ff3f8e;
+
 }
 
 
 h2{
+
     color:#ff6699;
-}
 
-
-.info{
-    color:#ff85ad;
-    font-size:14px;
-    line-height:24px;
 }
 
 
 
-.btn-box{
-    height:120px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:20px;
+.text{
+
+    color:#ff6699;
+
+    min-height:60px;
+
 }
+
 
 
 
 button{
+
     border:none;
-    border-radius:50px;
+
+    border-radius:40px;
+
+    padding:12px 30px;
+
+    margin:15px;
+
+    font-size:20px;
+
     cursor:pointer;
-    transition:all .5s ease;
+
 }
 
 
 
 #yes{
+
     background:#ff4d94;
+
     color:white;
-    width:110px;
-    height:45px;
-    font-size:20px;
-    box-shadow:0 5px 20px rgba(255,0,100,.35);
+
+    transition:.5s;
+
 }
 
 
 
 #no{
+
     background:#ddd;
-    color:#777;
-    width:80px;
-    height:40px;
+
     position:absolute;
+
 }
 
 
 
 
-/* 爱心雨 */
 
-.fall{
+/* 爱心 */
+
+.love{
+
     position:absolute;
+
     top:-50px;
-    z-index:1;
-    animation:fall linear forwards;
+
+    animation:fall 5s linear forwards;
+
 }
 
 
 @keyframes fall{
 
     to{
-        transform:translateY(110vh) rotate(360deg);
+
+        transform:
+        translateY(110vh)
+        rotate(360deg);
+
         opacity:0;
+
     }
 
 }
@@ -130,27 +181,39 @@ button{
 
 /* 烟花 */
 
-.firework{
+.fire{
+
     position:absolute;
+
     font-size:35px;
+
     animation:boom 1s forwards;
+
 }
 
 
 @keyframes boom{
 
-    0%{
+    from{
+
         transform:scale(.2);
+
     }
 
-    100%{
-        transform:scale(4);
+    to{
+
+        transform:scale(5);
+
         opacity:0;
+
     }
 
 }
 
+
+
 </style>
+
 
 </head>
 
@@ -158,36 +221,35 @@ button{
 <body>
 
 
+
 <div class="card">
 
 
-<div class="heart">❤️</div>
+<div class="heart">
+❤️
+</div>
 
 
-<div class="info">
-IP: 192.168.1.520<br>
-LOCATION: MY HEART<br>
-STATUS: LOVE FOUND
+<h1>
+💗 吴敏宝宝 💗
+</h1>
+
+
+
+<div class="text" id="text">
+
 </div>
 
 
 
-<h1>💗 吴敏宝宝 💗</h1>
+<button id="yes">
+YES ❤️
+</button>
 
 
-<h2>我喜欢你</h2>
-
-<h2>可不可以跟我在一起？</h2>
-
-
-
-<div class="btn-box">
-
-<button id="yes">YES ❤️</button>
-
-<button id="no">NO 💔</button>
-
-</div>
+<button id="no">
+NO 💔
+</button>
 
 
 </div>
@@ -198,16 +260,42 @@ STATUS: LOVE FOUND
 <script>
 
 
+// 打字效果
+
+let words=
+"遇见你之后，世界变得更加温柔。\n我喜欢你，可不可以跟我在一起？";
+
+let index=0;
+
+
+function typing(){
+
+    if(index<words.length){
+
+        document.getElementById("text")
+        .innerHTML+=words[index]
+        .replace("\n","<br>");
+
+        index++;
+
+        setTimeout(typing,120);
+
+    }
+
+}
+
+typing();
+
+
+
+
+// YES变大
+
+
 let yes=document.getElementById("yes");
-
-let no=document.getElementById("no");
-
 
 let scale=1;
 
-
-
-// YES缓慢变大
 
 yes.onclick=function(){
 
@@ -215,7 +303,7 @@ yes.onclick=function(){
     scale+=0.08;
 
 
-    if(scale<=1.7){
+    if(scale<1.8){
 
         yes.style.transform=
         "scale("+scale+")";
@@ -224,16 +312,29 @@ yes.onclick=function(){
 
 
 
-    if(scale>1.6){
+    if(scale>=1.7){
 
 
-        document.querySelector(".card").innerHTML=
+        document.querySelector(".card")
+        .innerHTML=
 
         `
-        <div class="heart">💖</div>
-        <h1>吴敏宝宝 ❤️</h1>
-        <h2>表白成功！</h2>
-        <h2>以后请多多指教 💕</h2>
+        <div class="heart">
+        💖
+        </div>
+
+        <h1>
+        吴敏宝宝 ❤️
+        </h1>
+
+        <h2>
+        表白成功！
+        </h2>
+
+        <p>
+        以后请多多指教💕
+        </p>
+
         `;
 
 
@@ -246,19 +347,20 @@ yes.onclick=function(){
 
 
 
-
 // NO逃跑
+
+
+let no=document.getElementById("no");
+
 
 no.onmouseover=function(){
 
-
     no.style.left=
-    Math.random()*(window.innerWidth-100)+"px";
+    Math.random()*80+"vw";
 
 
     no.style.top=
-    Math.random()*(window.innerHeight-50)+"px";
-
+    Math.random()*80+"vh";
 
 }
 
@@ -268,52 +370,40 @@ no.onmouseover=function(){
 
 // 爱心雨
 
-function heartRain(){
+
+setInterval(()=>{
 
 
-    let h=document.createElement("div");
+    let love=document.createElement("div");
+
+    love.className="love";
 
 
-    h.className="fall";
-
-
-    h.innerHTML=
+    love.innerHTML=
     ["❤️","💗","💕","💖"]
     [Math.floor(Math.random()*4)];
 
 
-
-    h.style.left=
+    love.style.left=
     Math.random()*100+"vw";
 
 
-
-    h.style.fontSize=
-    (15+Math.random()*25)+"px";
-
+    love.style.fontSize=
+    20+Math.random()*20+"px";
 
 
-    h.style.animationDuration=
-    (3+Math.random()*3)+"s";
-
-
-
-    document.body.appendChild(h);
-
+    document.body.appendChild(love);
 
 
     setTimeout(()=>{
 
-        h.remove();
+        love.remove();
 
-    },6000);
-
-
-}
+    },5000);
 
 
-setInterval(heartRain,200);
 
+},200);
 
 
 
@@ -321,53 +411,53 @@ setInterval(heartRain,200);
 
 // 烟花
 
+
 function fireworks(){
 
 
-    for(let i=0;i<50;i++){
+for(let i=0;i<60;i++){
 
 
-        setTimeout(()=>{
+setTimeout(()=>{
 
 
-            let f=document.createElement("div");
+let f=document.createElement("div");
 
 
-            f.className="firework";
+f.className="fire";
 
 
-            f.innerHTML=
-            ["🎆","✨","💖"]
-            [Math.floor(Math.random()*3)];
-
-
-
-            f.style.left=
-            Math.random()*100+"vw";
+f.innerHTML=
+["🎆","✨","💖"]
+[Math.floor(Math.random()*3)];
 
 
 
-            f.style.top=
-            Math.random()*80+"vh";
+f.style.left=
+Math.random()*100+"vw";
+
+
+f.style.top=
+Math.random()*80+"vh";
 
 
 
-            document.body.appendChild(f);
+document.body.appendChild(f);
 
 
 
-            setTimeout(()=>{
+setTimeout(()=>{
 
-                f.remove();
+f.remove();
 
-            },1000);
-
-
-
-        },i*80);
+},1000);
 
 
-    }
+
+},i*80);
+
+
+}
 
 
 }
@@ -378,4 +468,5 @@ function fireworks(){
 
 
 </body>
+
 </html>
