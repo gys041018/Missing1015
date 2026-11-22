@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -7,6 +7,8 @@
 <style>
 *{
     box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 body{
     margin:0;
@@ -15,22 +17,22 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    font-family:"Microsoft YaHei";
+    font-family:"Microsoft YaHei",system-ui,sans-serif;
     background:
-    radial-gradient(circle at 20% 20%, #fff4e1 0%, transparent 40%),
-    radial-gradient(circle at 80% 10%, #ffe2d1 0%, transparent 45%),
-    linear-gradient(135deg, #fff7ea, #ffe9dc);
+    radial-gradient(circle at 15% 15%, #fff0d6 0%, transparent 42%),
+    radial-gradient(circle at 85% 20%, #ffe2c2 0%, transparent 48%),
+    linear-gradient(135deg, #fff6e4, #ffe4cf);
 }
 .card{
     width:330px;
     padding:30px 25px;
     background:
-    linear-gradient(180deg, #ffffff 0%, #fffbf4 100%);
+    linear-gradient(180deg, #ffffff 0%, #fffbf2 100%);
     border-radius:28px;
     text-align:center;
     box-shadow:
-    0 10px 30px rgba(255, 180, 130, .25),
-    0 2px 8px rgba(255, 210, 180, .2);
+    0 10px 30px rgba(255, 175, 110, .28),
+    0 2px 8px rgba(255, 200, 160, .22);
     z-index:5;
     position:relative;
 }
@@ -39,28 +41,28 @@ body{
     content:"";
     position:absolute;
     border-radius:50%;
-    filter:blur(18px);
-    opacity:.4;
+    filter:blur(20px);
+    opacity:.45;
     z-index:-1;
 }
 .card::before{
-    width:180px;
-    height:180px;
-    background:#ffd9b8;
+    width:190px;
+    height:190px;
+    background:#ffd4a8;
     top:-40px;
     left:-40px;
 }
 .card::after{
-    width:140px;
-    height:140px;
-    background:#ffe4c7;
+    width:150px;
+    height:150px;
+    background:#ffc99a;
     bottom:-30px;
     right:-30px;
 }
 .heart{
     font-size:52px;
     animation:beat 1.2s infinite;
-    filter:drop-shadow(0 4px 6px rgba(255, 170, 130, .3));
+    filter:drop-shadow(0 4px 6px rgba(255, 160, 110, .32));
 }
 @keyframes beat{
     50%{
@@ -68,15 +70,15 @@ body{
     }
 }
 h1{
-    color:#d98a5a;
+    color:#c97a4a;
     font-size:32px;
     letter-spacing:1px;
 }
 h2{
-    color:#e0a074;
+    color:#d48a5a;
 }
 .text{
-    color:#d98a5a;
+    color:#c97a4a;
     line-height:28px;
     min-height:50px;
 }
@@ -84,10 +86,10 @@ h2{
     margin-top:18px;
     padding:16px;
     background:
-    linear-gradient(180deg, #fff7ed, #fff1dd);
-    border:1px solid #ffdfc4;
+    linear-gradient(180deg, #fff7e8, #ffeeda);
+    border:1px solid #ffdfbf;
     border-radius:18px;
-    color:#b5744a;
+    color:#a66640;
     font-size:15px;
     line-height:26px;
 }
@@ -101,11 +103,11 @@ button{
 }
 #yes{
     background:
-    linear-gradient(135deg, #ffb380, #ffc99a);
+    linear-gradient(135deg, #ffa96b, #ffc18a);
     color:white;
     transition:transform .4s ease;
     box-shadow:
-    0 8px 20px rgba(255, 170, 120, .4);
+    0 8px 20px rgba(255, 160, 110, .42);
 }
 .love{
     position:absolute;
