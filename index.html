@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>wm 生日快乐 🤍</title>
+<title>wm 生日快乐 🌙</title>
 <style>
 *{
     box-sizing:border-box;
@@ -65,7 +65,11 @@ body{
 .heart{
     font-size:52px;
     animation:beat 1.2s infinite;
-    filter:drop-shadow(0 4px 6px rgba(255, 160, 110, .32));
+    background:linear-gradient(135deg, #7fa6c2, #b9a7d6);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    filter:drop-shadow(0 4px 6px rgba(140, 170, 200, .35));
 }
 @keyframes beat{
     50%{
@@ -73,7 +77,10 @@ body{
     }
 }
 h1{
-    color:#c97a4a;
+    background:linear-gradient(135deg, #7fa6c2, #b9a7d6);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
     font-size:32px;
     letter-spacing:1px;
 }
@@ -106,11 +113,11 @@ button{
 }
 #yes{
     background:
-    linear-gradient(135deg, #ffa96b, #ffc18a);
+    linear-gradient(135deg, #8fb0d1, #b9a7d6);
     color:white;
     transition:transform .4s ease;
     box-shadow:
-    0 8px 20px rgba(255, 160, 110, .42);
+    0 8px 20px rgba(140, 170, 200, .4);
 }
 .love{
     position:absolute;
@@ -144,10 +151,10 @@ button{
 <body>
 <div class="card">
 <div class="heart">
-🤍
+🌙
 </div>
 <h1>
-🤍 wm 🤍
+🌙 wm 🌙
 </h1>
 <div class="text" id="text"></div>
 <div class="letter">
@@ -156,7 +163,7 @@ button{
 在自己的节奏里，寻得安宁，守住心底那份独属于你的温柔与清醒。
 </div>
 <button id="yes">
-收下祝福 🤍
+收下祝福 🌙
 </button>
 </div>
 <script>
@@ -190,7 +197,7 @@ yes.onclick=function(){
         🪐
         </div>
         <h1>
-        wm 🤍
+        wm 🌙
         </h1>
         <h2>
         祝福送达 ✨
@@ -207,7 +214,7 @@ yes.onclick=function(){
 setInterval(function(){
     let love=document.createElement("div");
     love.className="love";
-    love.innerHTML=["🕯️","🪐","☁️","🌷","🤍"][Math.floor(Math.random()*5)];
+    love.innerHTML=["🕯️","🪐","☁️","🌷","🌙"][Math.floor(Math.random()*5)];
     love.style.left=Math.random()*100+"vw";
     love.style.fontSize=(18+Math.random()*15)+"px";
     document.body.appendChild(love);
@@ -224,7 +231,7 @@ function fireworks(){
         setTimeout(function(){
             let f=document.createElement("div");
             f.className="fire";
-            f.innerHTML=["🪐","🕯️","☁️","🌷","🤍"][Math.floor(Math.random()*5)];
+            f.innerHTML=["🪐","🕯️","☁️","🌷","🌙"][Math.floor(Math.random()*5)];
             f.style.left=Math.random()*100+"vw";
             f.style.top=Math.random()*80+"vh";
             document.body.appendChild(f);
