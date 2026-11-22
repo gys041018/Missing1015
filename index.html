@@ -19,8 +19,8 @@ body{
     background:
     linear-gradient(
     135deg,
-    #ffb6d9,
-    #ffe6f1
+    #f8c8dd,
+    #fff0f6
     );
 }
 .card{
@@ -30,7 +30,7 @@ body{
     border-radius:28px;
     text-align:center;
     box-shadow:
-    0 10px 30px rgba(255,0,100,.25);
+    0 10px 30px rgba(240,140,180,.22);
     z-index:5;
 }
 .heart{
@@ -44,14 +44,14 @@ body{
     }
 }
 h1{
-    color:#ff4081;
+    color:#e86898;
     font-size:32px;
 }
 h2{
-    color:#ff6699;
+    color:#e878a2;
 }
 .text{
-    color:#ff6699;
+    color:#e878a2;
     line-height:28px;
     min-height:50px;
 }
@@ -60,7 +60,7 @@ h2{
     padding:15px;
     background:#fff5fa;
     border-radius:15px;
-    color:#ff6699;
+    color:#e878a2;
     font-size:15px;
     line-height:26px;
 }
@@ -69,21 +69,16 @@ button{
     border-radius:40px;
     font-size:20px;
     padding:12px 28px;
-    margin:15px;
+    margin-top:15px;
     cursor:pointer;
 }
 #yes{
-    background:#ff4d94;
+    background:#e86898;
     color:white;
     transition:
     transform .4s ease;
     box-shadow:
-    0 5px 15px rgba(255,0,100,.3);
-}
-#no{
-    background:#ddd;
-    color:#777;
-    position:absolute;
+    0 5px 15px rgba(240,140,180,.28);
 }
 .love{
     position:absolute;
@@ -132,10 +127,7 @@ button{
 不必匆忙，自在从容 ❤️
 </div>
 <button id="yes">
-收下祝福 ❤️
-</button>
-<button id="no">
-先不收 💔
+开启祝福 ✨
 </button>
 </div>
 <script>
@@ -172,21 +164,16 @@ yes.onclick=function(){
         wm ❤️
         </h1>
         <h2>
-        祝福送达✨
+        生辰喜乐✨
         </h2>
         <p>
-        愿岁岁无忧，
+        愿岁岁安然，
         <br>
-        一直安静温柔，自在从容
+        常伴安静与温柔，自在从容
         </p>
         `;
         fireworks();
     }
-};
-let no=document.getElementById("no");
-no.onmouseover=function(){
-    no.style.left=Math.random()*75+"vw";
-    no.style.top=Math.random()*75+"vh";
 };
 setInterval(function(){
     let love=document.createElement("div");
