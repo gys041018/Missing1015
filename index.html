@@ -1,603 +1,223 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
 <title>wm 生日快乐 ❤️</title>
-
 <style>
-
 *{
     box-sizing:border-box;
 }
-
-
 body{
-
     margin:0;
     height:100vh;
     overflow:hidden;
-
     display:flex;
     justify-content:center;
     align-items:center;
-
     font-family:"Microsoft YaHei";
-
     background:
     linear-gradient(
     135deg,
     #ffb6d9,
     #ffe6f1
     );
-
 }
-
-
-
 .card{
-
     width:330px;
-
     padding:30px 25px;
-
     background:white;
-
     border-radius:28px;
-
     text-align:center;
-
     box-shadow:
     0 10px 30px rgba(255,0,100,.25);
-
     z-index:5;
-
 }
-
-
-
 .heart{
-
     font-size:55px;
-
     animation:
     beat 1.2s infinite;
-
 }
-
-
-
 @keyframes beat{
-
     50%{
         transform:scale(1.15);
     }
-
 }
-
-
-
 h1{
-
     color:#ff4081;
-
     font-size:32px;
-
 }
-
-
-
 h2{
-
     color:#ff6699;
 }
-
-
-
 .text{
-
     color:#ff6699;
-
     line-height:28px;
-
     min-height:50px;
-
 }
-
-
-/* 专属寄语 */
-
 .letter{
-
     margin-top:18px;
-
     padding:15px;
-
     background:#fff5fa;
-
     border-radius:15px;
-
     color:#ff6699;
-
     font-size:15px;
-
     line-height:26px;
-
 }
-
-
-
 button{
-
     border:none;
-
     border-radius:40px;
-
     font-size:20px;
-
     padding:12px 28px;
-
     margin:15px;
-
     cursor:pointer;
-
 }
-
-
-
 #yes{
-
     background:#ff4d94;
-
     color:white;
-
     transition:
     transform .4s ease;
-
     box-shadow:
     0 5px 15px rgba(255,0,100,.3);
-
 }
-
-
-
 #no{
-
     background:#ddd;
-
     color:#777;
-
     position:absolute;
-
 }
-
-
-
-
-
-/* 爱心 */
-
 .love{
-
     position:absolute;
-
     top:-30px;
-
     z-index:1;
-
     animation:
     fall 5s linear forwards;
-
 }
-
-
-
 @keyframes fall{
-
     to{
-
         transform:
         translateY(110vh);
-
         opacity:0;
-
     }
-
 }
-
-
-
-
-
-/* 烟花 */
-
 .fire{
-
     position:absolute;
-
     font-size:30px;
-
     animation:
     boom 1s forwards;
-
 }
-
-
-
 @keyframes boom{
-
-
     0%{
-
         transform:scale(.2);
-
         opacity:1;
-
     }
-
-
     100%{
-
         transform:scale(3);
-
         opacity:0;
-
     }
-
 }
-
-
-
 </style>
-
 </head>
-
-
-
 <body>
-
-
 <div class="card">
-
-
 <div class="heart">
 ❤️
 </div>
-
-
-
 <h1>
 💗 wm 💗
 </h1>
-
-
-
 <div class="text" id="text"></div>
-
-
-
 <div class="letter">
-
-致 wm：<br><br>
-
-生日快乐。<br>
+生日快乐，wm。<br><br>
 新的一岁，愿你拥有属于自己的安静与温柔，<br>
 不必匆忙，自在从容 ❤️
-
 </div>
-
-
-
 <button id="yes">
 收下祝福 ❤️
 </button>
-
-
 <button id="no">
 先不收 💔
 </button>
-
-
-
 </div>
-
-
-
-
 <script>
-
-
-// 打字效果
-let words=
-"生日快乐，wm。\n新的一岁，愿你拥有属于自己的安静与温柔，不必匆忙，自在从容。";
-
-
+let words="生日快乐，wm。新的一岁，愿你拥有属于自己的安静与温柔，不必匆忙，自在从容。";
 let index=0;
-
-
 function typing(){
-
-
-if(index<words.length){
-
-
-let t=document.getElementById("text");
-
-
-t.innerHTML+=
-words[index]=="\n"
-?
-"<br>"
-:
-words[index];
-
-
-index++;
-
-
-setTimeout(
-typing,
-100
-);
-
-
+    if(index<words.length){
+        let t=document.getElementById("text");
+        t.innerHTML+=
+        words[index]=="\n"
+        ?
+        "<br>"
+        :
+        words[index];
+        index++;
+        setTimeout(typing,100);
+    }
 }
-
-
-}
-
-
 typing();
-
-
-
-
-
-
-// YES放大
-let yes=
-document.getElementById("yes");
-
-
+let yes=document.getElementById("yes");
 let scale=1;
-
-
-
 yes.onclick=function(){
-
-
-scale+=0.08;
-
-
-if(scale<1.65){
-
-
-yes.style.transform=
-"scale("+scale+")";
-
-
-}
-
-
-
-if(scale>=1.65){
-
-
-
-document.querySelector(".card").innerHTML=
-
-
-`
-
-<div class="heart">
-💖
-</div>
-
-
-<h1>
-wm ❤️
-</h1>
-
-
-<h2>
-祝福已收下！
-</h2>
-
-
-<p>
-愿岁岁平安，
-<br>
-永远自在从容 ✨
-
-</p>
-
-`;
-
-
-
-fireworks();
-
-
-
-}
-
-
+    scale+=0.08;
+    if(scale<1.65){
+        yes.style.transform="scale("+scale+")";
+    }
+    if(scale>=1.65){
+        document.querySelector(".card").innerHTML=
+        `
+        <div class="heart">
+        💖
+        </div>
+        <h1>
+        wm ❤️
+        </h1>
+        <h2>
+        祝福送达✨
+        </h2>
+        <p>
+        愿岁岁无忧，
+        <br>
+        一直安静温柔，自在从容
+        </p>
+        `;
+        fireworks();
+    }
 };
-
-
-
-
-
-
-// NO逃跑
-let no=
-document.getElementById("no");
-
-
-
+let no=document.getElementById("no");
 no.onmouseover=function(){
-
-
-no.style.left=
-Math.random()*75+"vw";
-
-
-no.style.top=
-Math.random()*75+"vh";
-
-
+    no.style.left=Math.random()*75+"vw";
+    no.style.top=Math.random()*75+"vh";
 };
-
-
-
-
-
-
-
-// 爱心雨
 setInterval(function(){
-
-
-
-let love=
-document.createElement("div");
-
-
-love.className="love";
-
-
-love.innerHTML=
-[
-"❤️",
-"💗",
-"💕",
-"✨"
-]
-[
-Math.floor(Math.random()*4)
-];
-
-
-
-love.style.left=
-Math.random()*100+"vw";
-
-
-
-love.style.fontSize=
-(18+Math.random()*15)+"px";
-
-
-
-document.body.appendChild(love);
-
-
-
-
-setTimeout(function(){
-
-
-love.remove();
-
-
-},5000);
-
-
-
-
-
-let list=
-document.querySelectorAll(".love");
-
-
-if(list.length>20){
-
-
-list[0].remove();
-
-
-}
-
-
-
+    let love=document.createElement("div");
+    love.className="love";
+    love.innerHTML=["❤️","💗","💕","✨"][Math.floor(Math.random()*4)];
+    love.style.left=Math.random()*100+"vw";
+    love.style.fontSize=(18+Math.random()*15)+"px";
+    document.body.appendChild(love);
+    setTimeout(function(){
+        love.remove();
+    },5000);
+    let list=document.querySelectorAll(".love");
+    if(list.length>20){
+        list[0].remove();
+    }
 },500);
-
-
-
-
-
-
-
-
-
-// 烟花
 function fireworks(){
-
-
-
-for(let i=0;i<25;i++){
-
-
-
-setTimeout(function(){
-
-
-let f=
-document.createElement("div");
-
-
-f.className="fire";
-
-
-f.innerHTML=
-[
-"🎆",
-"✨",
-"💖",
-"🎇"
-]
-[
-Math.floor(Math.random()*4)
-];
-
-
-
-f.style.left=
-Math.random()*100+"vw";
-
-
-f.style.top=
-Math.random()*80+"vh";
-
-
-
-document.body.appendChild(f);
-
-
-
-setTimeout(function(){
-
-f.remove();
-
-},1000);
-
-
-
-},i*100);
-
-
-
+    for(let i=0;i<25;i++){
+        setTimeout(function(){
+            let f=document.createElement("div");
+            f.className="fire";
+            f.innerHTML=["🎆","✨","💖","🎇"][Math.floor(Math.random()*4)];
+            f.style.left=Math.random()*100+"vw";
+            f.style.top=Math.random()*80+"vh";
+            document.body.appendChild(f);
+            setTimeout(function(){
+                f.remove();
+            },1000);
+        },i*100);
+    }
 }
-
-
-}
-
-
-
 </script>
-
-
 </body>
 </html>
