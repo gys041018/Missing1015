@@ -1,246 +1,400 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<title>Yearning · wm 生日快乐 🌙</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Merry Christmas</title>
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-body{
-    margin:0;
-    height:100vh;
-    overflow:hidden;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-family:"Microsoft YaHei",system-ui,sans-serif;
-    background:
-    radial-gradient(circle at 15% 15%, #fff0d6 0%, transparent 42%),
-    radial-gradient(circle at 85% 20%, #ffe2c2 0%, transparent 48%),
-    linear-gradient(135deg, #fff6e4, #ffe4cf);
-}
-.card{
-    width:330px;
-    padding:30px 25px;
-    background:
-    linear-gradient(180deg, #ffffff 0%, #fffbf2 100%);
-    border-radius:28px;
-    text-align:center;
-    box-shadow:
-    0 10px 30px rgba(255, 175, 110, .28),
-    0 2px 8px rgba(255, 200, 160, .22);
-    z-index:5;
-    position:relative;
-}
-.card::before,
-.card::after{
-    content:"";
-    position:absolute;
-    border-radius:50%;
-    filter:blur(20px);
-    opacity:.45;
-    z-index:-1;
-}
-.card::before{
-    width:190px;
-    height:190px;
-    background:#ffd4a8;
-    top:-40px;
-    left:-40px;
-}
-.card::after{
-    width:150px;
-    height:150px;
-    background:#ffc99a;
-    bottom:-30px;
-    right:-30px;
-}
-.heart{
-    font-size:52px;
-    animation:beat 1.2s infinite;
-    background:linear-gradient(135deg, #7fa6c2, #b9a7d6);
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-    filter:drop-shadow(0 4px 6px rgba(140, 170, 200, .35));
-}
-@keyframes beat{
-    50%{
-        transform:scale(1.12);
-    }
-}
-h1{
-    background:linear-gradient(135deg, #7fa6c2, #b9a7d6);
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-    font-size:32px;
-    letter-spacing:1px;
-}
-h2{
-    color:#d48a5a;
-}
-.text{
-    color:#c97a4a;
-    line-height:28px;
-    min-height:50px;
-}
-.letter{
-    margin-top:18px;
-    padding:16px;
-    background:
-    linear-gradient(180deg, #fff7e8, #ffeeda);
-    border:1px solid #ffdfbf;
-    border-radius:18px;
-    color:#a66640;
-    font-size:15px;
-    line-height:26px;
-}
-button{
-    border:none;
-    border-radius:40px;
-    font-size:20px;
-    padding:12px 28px;
-    margin:15px;
-    cursor:pointer;
-}
-#yes{
-    background:
-    linear-gradient(135deg, #8fb0d1, #b9a7d6);
-    color:white;
-    transition:transform .4s ease;
-    box-shadow:
-    0 8px 20px rgba(140, 170, 200, .4);
-}
-.love{
-    position:absolute;
-    top:-30px;
-    z-index:1;
-    animation:fall 5s linear forwards;
-}
-@keyframes fall{
-    to{
-        transform:translateY(110vh);
-        opacity:0;
-    }
-}
-.fire{
-    position:absolute;
-    font-size:28px;
-    animation:boom 1s forwards;
-}
-@keyframes boom{
-    0%{
-        transform:scale(.2);
-        opacity:1;
-    }
-    100%{
-        transform:scale(3);
-        opacity:0;
-    }
-}
+  html, body { margin: 0; padding: 0; height: 100%; background: #000; overflow: hidden; }
+  #stage { position: fixed; inset: 0; }
+  canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #gl { z-index: 1; }
+  #ui { z-index: 2; pointer-events: none; }
+  #tip {
+    position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
+    color: rgba(255,255,255,.38); font: 13px/1.6 "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+    letter-spacing: .08em; z-index: 3; pointer-events: none; white-space: nowrap;
+  }
 </style>
 </head>
 <body>
-<div class="card">
-<div class="heart">
-🌙
+<div id="stage">
+  <canvas id="gl"></canvas>
+  <canvas id="ui"></canvas>
 </div>
-<h1>
-Yearning · wm 🌙
-</h1>
-<div class="text" id="text"></div>
-<div class="letter">
-小吴同学，生日快乐。<br><br>
-不必强迫自己热闹。愿新的一岁，你内心的褶皱都能慢慢舒展，<br>
-在自己的节奏里，寻得安宁，守住心底那份独属于你的温柔与清醒。
-</div>
-<button id="yes">
-收下祝福 🌙
-</button>
-</div>
+<div id="tip">点击画面：暂停 / 继续旋转</div>
+
 <script>
-let words="生日快乐，wm。新的一岁，愿你拥有属于自己的安静与温柔，不必匆忙，自在从容。";
-let index=0;
-function typing(){
-    if(index<words.length){
-        let t=document.getElementById("text");
-        t.innerHTML+=
-        words[index]=="\n"
-        ?
-        "<br>"
-        :
-        words[index];
-        index++;
-        setTimeout(typing,100);
+(function () {
+  "use strict";
+
+  // ================= 全局参数（与原版一致） =================
+  var DESIGN_W = 1600, DESIGN_H = 900;
+  var TREE_POINTS = 50000, GROUND_POINTS = 4000, STAR_POINTS = 1200,
+      HEART_POINTS = 1000, SNOW2D_POINTS = 10;
+  var CAM_DIST = 13, CAM_HEIGHT = 6.0, PITCH = -0.25, TREE_HEIGHT = 12.0;
+  var TAU = Math.PI * 2;
+  var MAIN_TEXT = "Merry Christmas";
+  var SUB_TEXT = "647";   // 想换成自己的名字 / 备注，改这一行即可
+
+  function rnd() { return Math.random(); }
+  function rndInt(a, b) { return Math.floor(a + Math.random() * (b - a + 1)); }
+  function rndRange(a, b) { return a + Math.random() * (b - a); }
+
+  // ================= 生成圣诞树 =================
+  function genTreePoints() {
+    var arr = [];
+    var loops = 9;
+    var spiralN = Math.floor(TREE_POINTS * 0.7);
+
+    for (var i = 0; i < spiralN; i++) {
+      var u = rnd();
+      var h = Math.pow(u, 1.6);
+      var y = TREE_HEIGHT * h + 0.2;
+
+      var baseR = Math.pow(1 - h, 1.1) * 3.2;
+      var wave = Math.max(0, Math.sin((h * 5.8 + 0.15) * TAU));
+      baseR *= 1.0 + 0.65 * wave;
+
+      var t = u * loops * TAU;
+      var angle = t + rndRange(-0.22, 0.22);
+      var r = baseR * rndRange(0.85, 1.08);
+
+      var x = Math.cos(angle) * r, z = Math.sin(angle) * r;
+
+      var midBoost = 1.0 - Math.abs(h - 0.55) * 1.5;
+      midBoost = Math.max(0.15, midBoost);
+      var bg = 155 + Math.floor(90 * midBoost);
+      var bb = 185 + Math.floor(70 * midBoost);
+
+      var cr = 255, cg = Math.min(255, bg + rndInt(-15, 20)), cb = Math.min(255, bb + rndInt(-15, 35));
+      if (rnd() < 0.08) { cr = 255; cg = 255 - rndInt(0, 35); cb = 230 + rndInt(0, 25); }
+      arr.push(x, y, z, cr / 255, cg / 255, cb / 255);
     }
-}
-typing();
-let yes=document.getElementById("yes");
-let scale=1;
-yes.onclick=function(){
-    scale+=0.08;
-    if(scale<1.65){
-        yes.style.transform="scale("+scale+")";
+
+    var fillN = TREE_POINTS - spiralN;
+    for (var j = 0; j < fillN; j++) {
+      var h2 = Math.pow(rnd(), 1.9);
+      var y2 = TREE_HEIGHT * h2 + 0.2 + rndRange(-0.08, 0.08);
+
+      var baseR2 = Math.pow(1 - h2, 1.1) * 4.3;
+      var wave2 = Math.max(0, Math.sin((h2 * 5.8 + 0.15) * TAU));
+      baseR2 *= 1.0 + 0.65 * wave2;
+
+      var r2 = baseR2 * Math.sqrt(rnd());
+      var a2 = rnd() * TAU;
+      var x2 = Math.cos(a2) * r2 + rndRange(-0.08, 0.08);
+      var z2 = Math.sin(a2) * r2 + rndRange(-0.08, 0.08);
+
+      arr.push(x2, y2, z2, 1.0, rndInt(165, 225) / 255, rndInt(190, 250) / 255);
     }
-    if(scale>=1.65){
-        document.querySelector(".card").innerHTML=
-        `
-        <div class="heart">
-        🪐
-        </div>
-        <h1>
-        Yearning · wm 🌙
-        </h1>
-        <h2>
-        祝福送达 ✨
-        </h2>
-        <p>
-        愿你常有独处的安稳，
-        <br>
-        内心自洽，在自己的节奏里慢慢发光。
-        </p>
-        `;
-        fireworks();
+    return arr;
+  }
+
+  // ================= 地面光环（法阵盘子） =================
+  function genGroundPoints() {
+    var arr = [];
+    var rings = [4.6, 6.0, 7.4, 8.8, 10.2, 11.4];
+    for (var i = 0; i < GROUND_POINTS; i++) {
+      var ring = rings[rndInt(0, rings.length - 1)];
+      // 高斯（Box-Muller）近似正态
+      var g = Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(TAU * Math.random());
+      var r = ring + g * 0.3;
+      var th = rnd() * TAU;
+      var x = Math.cos(th) * r, z = Math.sin(th) * r, y = -0.25;
+      var c = rnd() < 0.15 ? rndInt(235, 255) : rndInt(190, 235);
+      arr.push(x, y, z, c / 255, c / 255, 1.0);
     }
-};
-setInterval(function(){
-    let love=document.createElement("div");
-    love.className="love";
-    love.innerHTML=["🕯️","🪐","☁️","🌷","🌙"][Math.floor(Math.random()*5)];
-    love.style.left=Math.random()*100+"vw";
-    love.style.fontSize=(18+Math.random()*15)+"px";
-    document.body.appendChild(love);
-    setTimeout(function(){
-        love.remove();
-    },5000);
-    let list=document.querySelectorAll(".love");
-    if(list.length>20){
-        list[0].remove();
+    return arr;
+  }
+
+  // ================= 空中 3D 小亮点 =================
+  function genStarPoints() {
+    var arr = [];
+    for (var i = 0; i < STAR_POINTS; i++) {
+      var x = rndRange(-18, 18), z = rndRange(-18, 18), y = rndRange(3, 18);
+      var base = rndInt(215, 255) / 255;
+      arr.push(x, y, z, base, base, 1.0);
     }
-},500);
-function fireworks(){
-    for(let i=0;i<25;i++){
-        setTimeout(function(){
-            let f=document.createElement("div");
-            f.className="fire";
-            f.innerHTML=["🪐","🕯️","☁️","🌷","🌙"][Math.floor(Math.random()*5)];
-            f.style.left=Math.random()*100+"vw";
-            f.style.top=Math.random()*80+"vh";
-            document.body.appendChild(f);
-            setTimeout(function(){
-                f.remove();
-            },1000);
-        },i*100);
+    return arr;
+  }
+
+  // ================= 树顶 3D 爱心 =================
+  function genHeartPoints() {
+    var arr = [];
+    var scale = 0.9, topY = TREE_HEIGHT + 0.05;
+    var n = 0, guard = 0;
+    while (n < HEART_POINTS && guard < HEART_POINTS * 60) {
+      guard++;
+      var x = rndRange(-1.3, 1.3), y = rndRange(-1.4, 1.4);
+      var f = Math.pow(x * x + y * y - 1.0, 3) - x * x * (y * y * y);
+      if (f <= 0.0) {
+        var wx = x * scale * 0.8;
+        var wy = topY + (y + 1.0) * scale * 0.5;
+        var wz = rndRange(-0.18, 0.18);
+        var dist = Math.sqrt(x * x + y * y);
+        var factor = Math.max(0.35, 1.15 - 0.5 * dist);
+        var g = Math.max(120, Math.min(255, Math.floor(130 * factor + 80)));
+        var b = Math.max(120, Math.min(255, Math.floor(190 * factor + 70)));
+        arr.push(wx, wy, wz, 1.0, g / 255, b / 255);
+        n++;
+      }
     }
-}
+    return arr;
+  }
+
+  // ================= 画布 & WebGL =================
+  var glCanvas = document.getElementById("gl");
+  var uiCanvas = document.getElementById("ui");
+  var uiCtx = uiCanvas.getContext("2d");
+  var gl = glCanvas.getContext("webgl", { alpha: false, antialias: true, premultipliedAlpha: false })
+        || glCanvas.getContext("experimental-webgl");
+
+  var W = DESIGN_W, H = DESIGN_H, DPR = 1;
+
+  if (!gl) {
+    document.body.style.background = "#000";
+    uiCtx.font = "28px cursive";
+    uiCtx.fillStyle = "#fff";
+    uiCtx.textAlign = "center";
+    uiCtx.fillText("你的浏览器不支持 WebGL", uiCanvas.width / 2, uiCanvas.height / 2);
+    return;
+  }
+
+  // ---------- 着色器 ----------
+  var VS = [
+    "attribute vec3 aPos;",
+    "attribute vec3 aColor;",
+    "uniform float uAngle;",
+    "uniform vec2 uRes;",
+    "varying vec3 vColor;",
+    "void main(){",
+    "  float ca = cos(uAngle), sa = sin(uAngle);",
+    "  float xz = aPos.x * ca - aPos.z * sa;",
+    "  float zz = aPos.x * sa + aPos.z * ca;",
+    "  float cp = cos(-0.25), sp = sin(-0.25);",
+    "  float yp = aPos.y * cp - zz * sp;",
+    "  float zp = aPos.y * sp + zz * cp + 13.0;",
+    "  yp -= 6.0;",
+    "  if (zp <= 0.1) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); gl_PointSize = 0.0; return; }",
+    "  float f = 0.63;",
+    "  float ndcX = 2.0 * xz * f * uRes.y / (uRes.x * zp);",
+    "  float ndcY = 2.0 * yp * f / zp;",
+    "  gl_Position = vec4(ndcX, ndcY, (zp - 10.0) * 0.05, 1.0);",
+    "  float size = (3.6 - zp * 0.13) * (uRes.y / 900.0);",
+    "  gl_PointSize = max(1.0, size);",
+    "  vec3 c = aColor;",
+    "  float lum = 1.0;",
+    "  vColor = c * lum;",
+    "}"
+  ].join("\n");
+
+  var FS = [
+    "precision mediump float;",
+    "varying vec3 vColor;",
+    "void main(){",
+    "  vec2 d = gl_PointCoord - vec2(0.5);",
+    "  if (dot(d, d) > 0.25) discard;",
+    "  gl_FragColor = vec4(vColor, 1.0);",
+    "}"
+  ].join("\n");
+
+  function compile(type, src) {
+    var s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+      console.error(gl.getShaderInfoLog(s), src);
+    }
+    return s;
+  }
+
+  var prog = gl.createProgram();
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) console.error(gl.getProgramInfoLog(prog));
+  gl.useProgram(prog);
+
+  var aPos = gl.getAttribLocation(prog, "aPos");
+  var aColor = gl.getAttribLocation(prog, "aColor");
+  var uAngle = gl.getUniformLocation(prog, "uAngle");
+  var uRes = gl.getUniformLocation(prog, "uRes");
+
+  // ---------- 数据 ----------
+  var pts = genTreePoints();
+  var totalCount = pts.length / 6;
+  var extra = genGroundPoints();
+  totalCount += extra.length / 6;
+  pts = pts.concat(extra);
+  extra = genStarPoints();
+  totalCount += extra.length / 6;
+  pts = pts.concat(extra);
+  extra = genHeartPoints();
+  totalCount += extra.length / 6;
+  pts = pts.concat(extra);
+
+  var data = new Float32Array(pts);
+
+  var buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+
+  var stride = 6 * 4;
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, stride, 0);
+  gl.enableVertexAttribArray(aColor);
+  gl.vertexAttribPointer(aColor, 3, gl.FLOAT, false, stride, 12);
+
+  gl.enable(gl.DEPTH_TEST);
+  gl.depthFunc(gl.LESS);
+  gl.disable(gl.BLEND);
+  gl.clearColor(0, 0, 0, 1);
+
+  // ================= 前景 2D 大雪花 =================
+  var flakes = [];
+  function respawnFlake(f) {
+    f.x = rndRange(0, W);
+    f.y = rndRange(-80, -10);
+    f.r = rndRange(10, 16);
+    f.v = rndRange(30, 45);
+    var travel = (H + 80 - f.y) / (H / 900);
+    f.maxLife = travel / f.v;
+    f.life = f.maxLife;
+  }
+  for (var i = 0; i < SNOW2D_POINTS; i++) {
+    var f = {};
+    respawnFlake(f);
+    f.y = rndRange(-80, -10);
+    f.life = rnd() * f.maxLife * 0.3 + f.maxLife * 0.7;
+    flakes.push(f);
+  }
+
+  function updateSnow(dt, k) {
+    for (var i = 0; i < flakes.length; i++) {
+      var f = flakes[i];
+      f.y += f.v * k * dt;
+      f.life -= dt;
+      if (f.life <= 0 || f.y > H + 50 * k) respawnFlake(f);
+    }
+  }
+
+  function drawSnow() {
+    for (var i = 0; i < flakes.length; i++) {
+      var f = flakes[i];
+      if (f.maxLife <= 0) continue;
+      var phase = f.life / f.maxLife;
+      if (!isFinite(phase)) continue;
+      var alpha = phase > 0.3 ? 1 : Math.max(0, Math.min(1, phase / 0.3));
+      var r = f.r * (H / 900);
+      // 外层柔光
+      var grd = uiCtx.createRadialGradient(f.x, f.y, 0, f.x, f.y, r * 1.35);
+      grd.addColorStop(0, "rgba(255,255,255," + (alpha * 0.55) + ")");
+      grd.addColorStop(0.4, "rgba(232,240,255," + (alpha * 0.22) + ")");
+      grd.addColorStop(1, "rgba(255,255,255,0)");
+      uiCtx.fillStyle = grd;
+      uiCtx.beginPath();
+      uiCtx.arc(f.x, f.y, r * 1.35, 0, TAU);
+      uiCtx.fill();
+      // 中心亮核
+      var core = uiCtx.createRadialGradient(f.x, f.y, 0, f.x, f.y, r * 0.5);
+      core.addColorStop(0, "rgba(255,255,255," + alpha + ")");
+      core.addColorStop(0.6, "rgba(255,255,255," + (alpha * 0.85) + ")");
+      core.addColorStop(1, "rgba(255,255,255,0)");
+      uiCtx.fillStyle = core;
+      uiCtx.beginPath();
+      uiCtx.arc(f.x, f.y, r * 0.5, 0, TAU);
+      uiCtx.fill();
+    }
+  }
+
+  // ================= 尺寸自适应 =================
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+
+    glCanvas.width = Math.floor(W * DPR);
+    glCanvas.height = Math.floor(H * DPR);
+    uiCanvas.width = Math.floor(W * DPR);
+    uiCanvas.height = Math.floor(H * DPR);
+
+    uiCtx.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+    gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+    gl.uniform2f(uRes, glCanvas.width, glCanvas.height);
+
+    for (var i = 0; i < flakes.length; i++) {
+      var fl = flakes[i];
+      var ratio = fl.maxLife > 0 ? Math.max(0.05, Math.min(1, fl.life / fl.maxLife)) : 1;
+      fl.x = rndRange(0, W);
+      var travel = (H + 80 - fl.y) / (H / 900);
+      fl.maxLife = Math.max(0.1, travel / fl.v);
+      fl.life = fl.maxLife * ratio;
+    }
+  }
+  window.addEventListener("resize", resize, false);
+
+  // ================= 文字 =================
+  function drawText() {
+    var k = Math.min(W / DESIGN_W, H / DESIGN_H);
+    k = Math.max(k, 0.55);
+    var fs = 45 * k;
+    uiCtx.textAlign = "left";
+    uiCtx.textBaseline = "alphabetic";
+    uiCtx.font = "italic " + fs + "px 'Monotype Corsiva', 'Segoe Script', 'Brush Script MT', cursive";
+    uiCtx.fillStyle = "rgba(255,255,255,0.96)";
+    uiCtx.shadowColor = "rgba(180,200,255,0.55)";
+    uiCtx.shadowBlur = 18 * k;
+
+    var x = 40 * k;
+    var y = H / 3;
+    uiCtx.fillText(MAIN_TEXT, x, y + fs * 0.85);
+    uiCtx.font = "italic " + fs * 0.85 + "px 'Monotype Corsiva', 'Segoe Script', 'Brush Script MT', cursive";
+    uiCtx.fillText(SUB_TEXT, x, y + fs * 0.85 + fs * 1.35);
+    uiCtx.shadowBlur = 0;
+    uiCtx.shadowColor = "transparent";
+  }
+
+  // ================= 主循环 =================
+  var angle = 0.0;
+  var paused = false;
+  var last = performance.now();
+  var visible = true;
+
+  document.addEventListener("visibilitychange", function () {
+    visible = !document.hidden;
+    last = performance.now();
+  });
+
+  var stageEl = document.getElementById("stage");
+  stageEl.addEventListener("click", function () { paused = !paused; });
+  stageEl.addEventListener("touchstart", function () { paused = !paused; }, { passive: true });
+
+  function frame(now) {
+    var dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
+    if (!visible) dt = 0;
+
+    if (!paused) angle += 0.27 * dt;
+    var k = H / DESIGN_H;
+
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.uniform1f(uAngle, angle);
+    gl.drawArrays(gl.POINTS, 0, totalCount);
+
+    // 2D 图层
+    uiCtx.clearRect(0, 0, W, H);
+    updateSnow(dt, k);
+    drawSnow();
+    drawText();
+
+    requestAnimationFrame(frame);
+  }
+
+  resize();
+  requestAnimationFrame(frame);
+})();
 </script>
 </body>
 </html>
