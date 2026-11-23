@@ -3,13 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Merry Christmas</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="theme-color" content="#000000">
+<title>Happy everyday! · WM</title>
 <style>
   html, body { margin: 0; padding: 0; height: 100%; background: #000; overflow: hidden; }
   #stage { position: fixed; inset: 0; }
   canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
   #gl { z-index: 1; }
   #ui { z-index: 2; pointer-events: none; }
+  #music {
+    position: fixed; right: 18px; top: 18px; width: 46px; height: 46px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.07); color: #fff;
+    font-size: 20px; line-height: 1; cursor: pointer; z-index: 4; outline: none;
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    transition: background .2s, opacity .2s, transform .2s;
+  }
+  #music:hover { background: rgba(255,255,255,.18); transform: scale(1.06); }
+  #music.off { opacity: .45; }
   #tip {
     position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
     color: rgba(255,255,255,.38); font: 13px/1.6 "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -22,7 +33,8 @@
   <canvas id="gl"></canvas>
   <canvas id="ui"></canvas>
 </div>
-<div id="tip">点击画面：暂停 / 继续旋转</div>
+<button id="music" class="off" aria-label="背景音乐开关" title="背景音乐开关">♪</button>
+<div id="tip">点击画面：开启音乐 / 暂停旋转</div>
 
 <script>
 (function () {
@@ -34,8 +46,12 @@
       HEART_POINTS = 1000, SNOW2D_POINTS = 10;
   var CAM_DIST = 13, CAM_HEIGHT = 6.0, PITCH = -0.25, TREE_HEIGHT = 12.0;
   var TAU = Math.PI * 2;
-  var MAIN_TEXT = "Haapy everyday!";
-  var SUB_TEXT = "WM";   // 想换成自己的名字 / 备注，改这一行即可
+  var MAIN_TEXT = "Happy everyday!";   // 祝福语
+  var SUB_TEXT = "WM";                 // 署名
+
+  // 背景音乐：留空 = 用内置合成的《Jingle Bells》
+  // 填自己的音乐：仓库里的相对路径，或音频直链（.mp3 / .m4a / .ogg 结尾）
+  var MUSIC_SRC = "assets/试爱.mp3";
 
   function rnd() { return Math.random(); }
   function rndInt(a, b) { return Math.floor(a + Math.random() * (b - a + 1)); }
@@ -356,6 +372,135 @@
     uiCtx.shadowColor = "transparent";
   }
 
+  // ================= 背景音乐：自己的音乐文件 / 内置合成 =================
+  var audioCtx = null, masterGain = null, musicOn = false, musicTimer = 0, started = false;
+  var musicEl = null;
+  var NOTES = { "C5": 523.25, "D5": 587.33, "E5": 659.26, "F5": 698.46, "G5": 783.99 };
+  var BEAT = 60 / 132;   // 132 BPM
+
+  // 内置旋律：每项 [音名, 拍数]，“rest” 为休止
+  var MELODY = [
+    ["E5",1],["E5",1],["E5",1],["rest",1],
+    ["E5",1],["E5",1],["E5",1],["rest",1],
+    ["E5",1],["G5",1],["C5",1],["D5",1],
+    ["E5",4],
+    ["F5",1],["F5",1],["F5",1],["F5",1],
+    ["F5",0.5],["E5",0.5],["E5",0.5],["E5",0.5],["E5",1],
+    ["E5",1],["D5",1],["D5",1],["E5",1],
+    ["D5",2],["G5",2],
+    ["E5",1],["E5",1],["E5",1],["rest",1],
+    ["E5",1],["E5",1],["E5",1],["rest",1],
+    ["E5",1],["G5",1],["C5",1],["D5",1],
+    ["E5",4],
+    ["F5",1],["F5",1],["F5",1],["F5",1],
+    ["F5",0.5],["E5",0.5],["E5",0.5],["E5",0.5],["E5",1],
+    ["G5",1],["G5",1],["F5",1],["D5",1],
+    ["C5",4],
+    ["rest",2]
+  ];
+
+  // 一记钟琴音：基频 + 几个倍频泛音，指数衰减
+  function bell(freq, when, beats) {
+    var len = Math.max(0.55, beats * BEAT * 0.85);
+    var partials = [[1, 0.62], [2, 0.22], [3, 0.1], [4.06, 0.05]];
+    for (var i = 0; i < partials.length; i++) {
+      var mul = partials[i][0], amp = partials[i][1];
+      var o = audioCtx.createOscillator();
+      o.type = "sine";
+      o.frequency.value = freq * mul;
+      o.detune.value = (Math.random() - 0.5) * 6;
+      var g = audioCtx.createGain();
+      g.gain.setValueAtTime(0.0001, when);
+      g.gain.exponentialRampToValueAtTime(amp, when + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, when + len + 0.5);
+      o.connect(g);
+      g.connect(masterGain);
+      o.start(when);
+      o.stop(when + len + 0.6);
+    }
+  }
+
+  // 排一整遍旋律，返回总时长（秒）
+  function scheduleLoop(t0) {
+    var t = t0;
+    for (var i = 0; i < MELODY.length; i++) {
+      var n = MELODY[i][0], beats = MELODY[i][1];
+      if (n !== "rest") bell(NOTES[n], t + 0.02, beats);
+      t += beats * BEAT;
+    }
+    return t - t0;
+  }
+
+  function tickMusic() {
+    if (!musicOn) return;
+    var dur = scheduleLoop(audioCtx.currentTime + 0.15);
+    musicTimer = setTimeout(tickMusic, Math.max(400, (dur - 1.2) * 1000));
+  }
+
+  function ensureAudio() {
+    // 有自己的音乐文件 —— 用 <audio> 播放
+    if (MUSIC_SRC) {
+      if (!musicEl) {
+        musicEl = new Audio();
+        musicEl.src = MUSIC_SRC;
+        musicEl.loop = true;          // 循环播放
+        musicEl.preload = "auto";
+        musicEl.volume = 0.6;         // 音量 0 ~ 1
+        document.body.appendChild(musicEl);
+      }
+      return;
+    }
+    if (audioCtx) return;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    audioCtx = new AC();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 0.55;
+    var lp = audioCtx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = 5200;
+    masterGain.connect(lp);
+    lp.connect(audioCtx.destination);
+  }
+
+  function startMusic() {
+    ensureAudio();
+    started = true;
+    musicOn = true;
+    musicBtn.classList.remove("off");
+
+    if (MUSIC_SRC) {
+      if (musicEl) {
+        var pr = musicEl.play();
+        if (pr && pr.catch) pr.catch(function () {});
+      }
+      return;
+    }
+
+    if (!audioCtx) return;
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    clearTimeout(musicTimer);
+    tickMusic();
+  }
+
+  function stopMusic() {
+    musicOn = false;
+    musicBtn.classList.add("off");
+    clearTimeout(musicTimer);
+
+    if (MUSIC_SRC) {
+      if (musicEl) musicEl.pause();
+      return;
+    }
+    if (audioCtx && audioCtx.state === "running") audioCtx.suspend();
+  }
+
+  var musicBtn = document.getElementById("music");
+  musicBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    if (musicOn) stopMusic(); else startMusic();
+  });
+
   // ================= 主循环 =================
   var angle = 0.0;
   var paused = false;
@@ -368,8 +513,16 @@
   });
 
   var stageEl = document.getElementById("stage");
-  stageEl.addEventListener("click", function () { paused = !paused; });
-  stageEl.addEventListener("touchstart", function () { paused = !paused; }, { passive: true });
+  function firstGesture() {
+    if (!started && !musicOn) startMusic();
+  }
+  stageEl.addEventListener("click", function () { firstGesture(); paused = !paused; });
+  stageEl.addEventListener("touchstart", function () { firstGesture(); }, { passive: true });
+  document.addEventListener("keydown", function () { if (!started && !musicOn) startMusic(); });
+  document.addEventListener("pointerdown", function (e) {
+    if (e.target && e.target.id === "music") return;
+    if (!started && !musicOn) startMusic();
+  }, { passive: true });
 
   function frame(now) {
     var dt = Math.min((now - last) / 1000, 0.05);
